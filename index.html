@@ -1,667 +1,831 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UniFind — Lost & Found</title>
+  <title>ADNU Lost & Found</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: #f5f2ee; color: #1a1a1a; }
-    h1, h2, h3, .font-display { font-family: 'Syne', sans-serif; }
-
-    /* NAV */
-    .nav-link { transition: color 0.2s; }
-    .nav-link.active { color: #e85d26; border-bottom: 2px solid #e85d26; }
-    .nav-link:hover { color: #e85d26; }
-
-    /* PAGES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: #0f172a; min-height: 100vh; }
+ 
     .page { display: none; }
     .page.active { display: block; }
-
-    /* CARDS */
-    .item-card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1.5px solid #e8e4df;
-      transition: box-shadow 0.2s, transform 0.2s;
-      overflow: hidden;
-    }
-    .item-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10); transform: translateY(-2px); }
-
-    .badge-lost { background: #fff0eb; color: #e85d26; border: 1px solid #f4b89a; }
-    .badge-found { background: #eaf7f0; color: #1a8a50; border: 1px solid #8ed4b0; }
-    .badge-claimed { background: #f0f0f0; color: #888; border: 1px solid #ddd; }
-
-    /* FORM */
-    input, select, textarea {
-      font-family: 'DM Sans', sans-serif;
-      width: 100%;
-      border: 1.5px solid #ddd;
-      border-radius: 10px;
-      padding: 10px 14px;
-      background: #fff;
-      outline: none;
-      transition: border-color 0.2s;
-      font-size: 0.95rem;
-    }
-    input:focus, select:focus, textarea:focus { border-color: #e85d26; }
-    label { font-size: 0.85rem; font-weight: 500; color: #555; margin-bottom: 4px; display: block; }
-
-    .btn-primary {
-      background: #e85d26;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      border-radius: 10px;
-      padding: 12px 28px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      font-size: 0.95rem;
-      letter-spacing: 0.02em;
-    }
-    .btn-primary:hover { background: #c94d1a; transform: translateY(-1px); }
-    .btn-secondary {
-      background: #fff;
-      color: #e85d26;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      border-radius: 10px;
-      padding: 10px 22px;
-      border: 1.5px solid #e85d26;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 0.9rem;
-    }
-    .btn-secondary:hover { background: #fff0eb; }
-
-    /* TOAST */
-    #toast {
-      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: #1a1a1a; color: #fff; border-radius: 12px; padding: 14px 28px;
-      font-size: 0.92rem; z-index: 999; transition: transform 0.35s cubic-bezier(.4,0,.2,1);
-      font-family: 'DM Sans', sans-serif; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
-
+ 
+    /* NAV */
+    nav { background: #fff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 4px; }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-right: 12px; cursor: pointer; flex-shrink: 0; }
+    .nav-logo-icon { width: 30px; height: 30px; background: #1e293b; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: #fff; }
+    .nav-link { display: flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 8px; font-size: 0.82rem; font-weight: 500; color: #64748b; cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+    .nav-link:hover { background: #f1f5f9; color: #0f172a; }
+    .nav-link.active { background: #1e293b; color: #fff; }
+    .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .nav-spacer { flex: 1; }
+    .notif-badge { background: #3b82f6; color: #fff; font-size: 0.58rem; font-weight: 700; border-radius: 99px; padding: 1px 5px; margin-left: 2px; line-height: 1.4; }
+ 
+    /* MAIN */
+    .main { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+ 
+    /* HOME HERO */
+    .hero { text-align: center; margin-bottom: 32px; }
+    .hero h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .hero p { color: #64748b; font-size: 0.86rem; max-width: 460px; margin: 0 auto; line-height: 1.7; }
+    .search-bar { max-width: 580px; margin: 22px auto 0; position: relative; }
+    .search-bar input { width: 100%; padding: 11px 16px 11px 42px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.86rem; font-family: 'Inter', sans-serif; background: #fff; outline: none; color: #0f172a; transition: border-color 0.2s, box-shadow 0.2s; }
+    .search-bar input:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.12); }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+ 
+    /* FILTER ROW */
+    .filter-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+    .filter-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-select { padding: 7px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.8rem; font-family: 'Inter', sans-serif; color: #475569; background: #fff; cursor: pointer; outline: none; }
+    .filter-select:focus { border-color: #94a3b8; }
+    .item-count { font-size: 0.77rem; color: #94a3b8; }
+    .btn-report { display: flex; align-items: center; gap: 6px; padding: 9px 18px; background: #1e293b; color: #fff; border: none; border-radius: 9px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+    .btn-report:hover { background: #334155; }
+ 
+    /* GRID */
+    .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .item-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s; }
+    .item-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .item-thumb { height: 155px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; }
+    .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .item-body { padding: 13px 15px; }
+    .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .item-name { font-weight: 600; font-size: 0.88rem; color: #0f172a; }
+    .item-meta { display: flex; align-items: center; gap: 5px; font-size: 0.73rem; color: #64748b; margin-bottom: 2px; }
+    .item-meta svg { width: 11px; height: 11px; flex-shrink: 0; }
+ 
+    /* BADGES */
+    .badge { display: inline-flex; align-items: center; font-size: 0.67rem; font-weight: 700; padding: 3px 9px; border-radius: 99px; letter-spacing: 0.02em; }
+    .badge-found { background: #dcfce7; color: #15803d; }
+    .badge-lost  { background: #fef9c3; color: #a16207; }
+    .badge-claimed { background: #e0e7ff; color: #4338ca; }
+    .badge-pending { background: #fef3c7; color: #d97706; }
+    .badge-rejected { background: #f1f5f9; color: #64748b; }
+ 
     /* MODAL */
-    #modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.35); z-index: 200;
-      align-items: center; justify-content: center;
-    }
-    #modal-overlay.open { display: flex; }
-    #modal-box {
-      background: #fff; border-radius: 20px; max-width: 500px; width: 90%;
-      padding: 32px; position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-    }
-
-    /* STAT CARDS */
-    .stat-card {
-      background: #fff; border-radius: 16px; padding: 20px 24px;
-      border: 1.5px solid #e8e4df;
-    }
-
-    /* HERO STRIPE */
-    .hero-stripe {
-      background: linear-gradient(135deg, #e85d26 0%, #f0853a 100%);
-      border-radius: 20px;
-      padding: 36px 40px;
-      color: #fff;
-    }
-
-    /* Search bar */
-    .search-wrap input { border-radius: 999px; padding: 12px 20px; }
-
-    /* image preview */
-    #img-preview, #img-preview-found {
-      display: none; width: 100%; max-height: 160px; object-fit: cover;
-      border-radius: 10px; margin-top: 8px;
-    }
-
-    /* scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 99px; }
-
-    /* admin table */
-    .admin-table th { font-family: 'Syne', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #999; }
-    .admin-table td { font-size: 0.88rem; border-bottom: 1px solid #f0ede9; }
-    .admin-table tr:last-child td { border-bottom: none; }
-
-    /* empty state */
-    .empty-state { text-align: center; padding: 60px 20px; color: #bbb; }
-    .empty-state svg { margin: 0 auto 16px; display: block; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.4); z-index: 500; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 16px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .modal-hdr { padding: 20px 22px 0; display: flex; justify-content: space-between; align-items: center; }
+    .modal-hdr h3 { font-size: 1rem; font-weight: 700; }
+    .modal-close { background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 6px; }
+    .modal-close:hover { background: #f1f5f9; color: #0f172a; }
+    .modal-body { padding: 16px 22px 22px; }
+ 
+    /* FORMS */
+    .form-label { font-size: 0.81rem; font-weight: 500; color: #374151; display: block; margin-bottom: 4px; }
+    .form-input, .form-select, .form-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-family: 'Inter', sans-serif; font-size: 0.86rem; color: #0f172a; background: #fff; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.12); }
+    .form-textarea { resize: vertical; }
+    .form-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { margin-bottom: 14px; }
+    .section-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.07em; margin: 18px 0 10px; }
+ 
+    /* PHOTO UPLOAD */
+    .photo-box { border: 1.5px dashed #cbd5e1; border-radius: 10px; padding: 28px 16px; text-align: center; cursor: pointer; background: #f8fafc; transition: border-color 0.2s; }
+    .photo-box:hover { border-color: #94a3b8; }
+    .photo-box p { font-size: 0.8rem; color: #94a3b8; margin-top: 6px; }
+    .photo-preview { width: 100%; height: 170px; object-fit: cover; border-radius: 10px; display: none; }
+ 
+    /* BUTTONS */
+    .btn-primary { width: 100%; background: #1e293b; color: #fff; border: none; border-radius: 9px; padding: 11px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.86rem; cursor: pointer; transition: background 0.15s; }
+    .btn-primary:hover { background: #334155; }
+    .btn-sm-green { background: #dcfce7; color: #15803d; border: 1px solid #86efac; border-radius: 7px; padding: 7px 13px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+    .btn-sm-red   { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 7px; padding: 7px 13px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+    .btn-sm-dark  { background: #1e293b; color: #fff; border: none; border-radius: 7px; padding: 7px 13px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+ 
+    /* TOAST */
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: #fff; padding: 11px 22px; border-radius: 10px; font-size: 0.84rem; z-index: 9999; transition: transform 0.3s cubic-bezier(.4,0,.2,1); box-shadow: 0 8px 24px rgba(0,0,0,0.18); white-space: nowrap; }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+ 
+    /* ALERTS */
+    .alert-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 18px; display: flex; gap: 13px; align-items: flex-start; margin-bottom: 10px; position: relative; }
+    .alert-card.unread::after { content: ''; width: 7px; height: 7px; background: #3b82f6; border-radius: 50%; position: absolute; right: 16px; top: 16px; }
+    .alert-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.95rem; }
+    .alert-icon.blue { background: #f1f5f9; }
+    .alert-icon.green { background: #dcfce7; }
+    .alert-icon.yellow { background: #fef9c3; }
+    .alert-title { font-weight: 600; font-size: 0.86rem; margin-bottom: 3px; }
+    .alert-desc { font-size: 0.8rem; color: #475569; line-height: 1.6; }
+    .alert-date { font-size: 0.72rem; color: #94a3b8; margin-top: 5px; }
+ 
+    /* TABLES */
+    .section-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8; padding: 11px 14px; text-align: left; border-bottom: 1px solid #f1f5f9; background: #f8fafc; }
+    .data-table td { padding: 12px 14px; font-size: 0.83rem; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f8fafc; }
+ 
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px,1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 18px; }
+    .stat-num { font-size: 1.9rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: 0.73rem; color: #94a3b8; margin-top: 4px; font-weight: 500; }
+ 
+    /* PAGE HEADER */
+    .page-header { margin-bottom: 22px; }
+    .page-header h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 3px; }
+    .page-header p { font-size: 0.82rem; color: #64748b; }
+ 
+    /* SIGN IN TABS */
+    .si-tabs { display: flex; gap: 0; margin-bottom: 18px; border: 1px solid #e2e8f0; border-radius: 9px; overflow: hidden; }
+    .si-tab { flex: 1; padding: 9px; text-align: center; font-size: 0.81rem; font-weight: 600; cursor: pointer; border: none; background: #f8fafc; color: #64748b; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+    .si-tab.active { background: #1e293b; color: #fff; }
+ 
+    /* ADMIN TABS */
+    .admin-tabs { display: flex; gap: 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 18px; }
+    .admin-tab { padding: 10px 18px; font-size: 0.82rem; font-weight: 500; color: #64748b; cursor: pointer; border: none; background: none; font-family: 'Inter', sans-serif; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+    .admin-tab.active { color: #0f172a; border-bottom-color: #1e293b; font-weight: 600; }
+ 
+    /* MY REPORTS TABS */
+    .mr-tabs { display: flex; gap: 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 18px; }
+    .mr-tab { padding: 10px 18px; font-size: 0.82rem; font-weight: 500; color: #64748b; cursor: pointer; border: none; background: none; font-family: 'Inter', sans-serif; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+    .mr-tab.active { color: #0f172a; border-bottom-color: #1e293b; font-weight: 600; }
+ 
+    /* REPORT PAGE */
+    .report-wrap { max-width: 600px; margin: 0 auto; }
+    .back-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #64748b; cursor: pointer; margin-bottom: 18px; background: none; border: none; font-family: 'Inter', sans-serif; }
+    .back-btn:hover { color: #0f172a; }
+ 
+    /* DETAIL MODAL */
+    .detail-thumb { width: 100%; height: 190px; object-fit: cover; border-radius: 10px; margin-bottom: 14px; }
+    .detail-placeholder { width: 100%; height: 140px; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; margin-bottom: 14px; }
+    .detail-row { display: flex; align-items: flex-start; gap: 7px; font-size: 0.82rem; color: #475569; margin-bottom: 7px; }
+    .detail-row svg { width: 14px; height: 14px; flex-shrink: 0; color: #94a3b8; margin-top: 1px; }
+ 
+    /* VERIFY */
+    .verify-box { border-radius: 10px; padding: 13px 15px; }
+ 
+    /* EMPTY */
+    .empty-state { text-align: center; padding: 44px 20px; color: #94a3b8; }
+    .empty-state svg { margin: 0 auto 10px; display: block; }
+    .empty-state p { font-size: 0.83rem; }
+ 
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
   </style>
 </head>
-<body class="min-h-screen">
-
+<body>
+ 
 <!-- NAV -->
-<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-[#e8e4df]">
-  <div class="max-w-5xl mx-auto px-4 flex items-center gap-2 h-16">
-    <span class="font-display text-xl font-800 mr-6" style="font-weight:800;">
-      <span style="color:#e85d26;">Uni</span>Find
-    </span>
-    <div class="flex gap-1 flex-1 overflow-x-auto">
-      <button onclick="showPage('home')" class="nav-link active px-4 py-1.5 text-sm font-medium whitespace-nowrap" id="nav-home">Home</button>
-      <button onclick="showPage('lost')" class="nav-link px-4 py-1.5 text-sm font-medium whitespace-nowrap" id="nav-lost">Report Lost</button>
-      <button onclick="showPage('found')" class="nav-link px-4 py-1.5 text-sm font-medium whitespace-nowrap" id="nav-found">Report Found</button>
-      <button onclick="showPage('browse')" class="nav-link px-4 py-1.5 text-sm font-medium whitespace-nowrap" id="nav-browse">Browse Items</button>
-      <button onclick="showPage('admin')" class="nav-link px-4 py-1.5 text-sm font-medium whitespace-nowrap" id="nav-admin">Admin</button>
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      ADNU Lost & Found
     </div>
+    <button class="nav-link active" id="nav-home" onclick="showPage('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+    </button>
+    <button class="nav-link" id="nav-report" onclick="showPage('report')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Report
+    </button>
+    <button class="nav-link" id="nav-myreports" onclick="requireAuth('myreports')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>My Reports
+    </button>
+    <button class="nav-link" id="nav-alerts" onclick="requireAuth('alerts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alerts
+      <span class="notif-badge" id="alerts-badge" style="display:none;"></span>
+    </button>
+    <button class="nav-link" id="nav-admin" onclick="requireAuth('admin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin
+    </button>
+    <div class="nav-spacer"></div>
+    <button class="nav-link" id="nav-signin" onclick="signinOrOut()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <span id="signin-label">Sign In</span>
+    </button>
   </div>
 </nav>
-
-<div class="max-w-5xl mx-auto px-4 py-8">
-
-  <!-- HOME PAGE -->
-  <div id="page-home" class="page active">
-    <div class="hero-stripe mb-8">
-      <p class="text-sm font-medium opacity-75 mb-1">University Lost &amp; Found</p>
-      <h1 class="text-4xl font-display font-extrabold mb-3 leading-tight">Lost something?<br>We'll help you find it.</h1>
-      <p class="opacity-80 text-sm max-w-md">Report lost or found items around campus. Browse the board to reunite with your belongings.</p>
-      <div class="flex gap-3 mt-6 flex-wrap">
-        <button onclick="showPage('lost')" class="bg-white text-[#e85d26] font-display font-bold rounded-xl px-6 py-3 text-sm hover:bg-orange-50 transition">Report Lost Item</button>
-        <button onclick="showPage('found')" class="bg-white/20 text-white font-display font-bold rounded-xl px-6 py-3 text-sm hover:bg-white/30 transition border border-white/40">Report Found Item</button>
+ 
+<!-- PAGE: HOME -->
+<div id="page-home" class="page active">
+  <div class="main">
+    <div class="hero">
+      <h1>Return what's lost. Find what's yours.</h1>
+      <p>The centralized platform for reporting, searching, and claiming lost and found items across the Ateneo de Naga University campus.</p>
+      <div class="search-bar">
+        <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+        <input id="home-q" type="text" placeholder="Search by item name or keyword…" oninput="renderGrid()"/>
       </div>
     </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-3 gap-4 mb-8" id="stats-row">
-      <div class="stat-card text-center">
-        <div class="text-3xl font-display font-extrabold text-[#e85d26]" id="stat-lost">0</div>
-        <div class="text-xs text-gray-400 mt-1 font-medium">Lost Reports</div>
+    <div class="filter-row">
+      <div class="filter-left">
+        <select class="filter-select" id="f-status" onchange="renderGrid()">
+          <option value="">All Status</option>
+          <option value="found">Found</option>
+          <option value="lost">Lost</option>
+        </select>
+        <select class="filter-select" id="f-cat" onchange="renderGrid()">
+          <option value="">All Categories</option>
+          <option>Gadget</option><option>Umbrella</option><option>School Supply</option>
+          <option>Clothing</option><option>ID / Documents</option><option>Keys</option>
+          <option>Bag / Wallet</option><option>Other</option>
+        </select>
+        <select class="filter-select" id="f-bld" onchange="renderGrid()">
+          <option value="">All Buildings</option>
+          <option>Xavier Hall</option><option>Other</option>
+        </select>
+        <span class="item-count" id="grid-count"></span>
       </div>
-      <div class="stat-card text-center">
-        <div class="text-3xl font-display font-extrabold text-[#1a8a50]" id="stat-found">0</div>
-        <div class="text-xs text-gray-400 mt-1 font-medium">Found Reports</div>
-      </div>
-      <div class="stat-card text-center">
-        <div class="text-3xl font-display font-extrabold text-gray-400" id="stat-claimed">0</div>
-        <div class="text-xs text-gray-400 mt-1 font-medium">Claimed</div>
-      </div>
+      <button class="btn-report" onclick="showPage('report')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Report Item
+      </button>
     </div>
-
-    <!-- Recent Items -->
-    <h2 class="font-display font-bold text-lg mb-4">Recent Reports</h2>
-    <div id="recent-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </div>
-
-  <!-- REPORT LOST -->
-  <div id="page-lost" class="page">
-    <h2 class="font-display font-extrabold text-2xl mb-1">Report a Lost Item</h2>
-    <p class="text-gray-400 text-sm mb-6">Fill in the details so others can help identify your item.</p>
-    <div class="bg-white rounded-2xl border border-[#e8e4df] p-6 max-w-xl">
-      <div class="space-y-4">
-        <div>
-          <label>Item Name *</label>
-          <input id="lost-name" type="text" placeholder="e.g. Blue water bottle"/>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label>Category *</label>
-            <select id="lost-cat">
-              <option value="">Select category</option>
-              <option>Electronics</option>
-              <option>Clothing</option>
-              <option>Accessories</option>
-              <option>ID / Documents</option>
-              <option>Keys</option>
-              <option>Bag / Wallet</option>
-              <option>Books / Stationery</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label>Date Lost *</label>
-            <input id="lost-date" type="date"/>
-          </div>
-        </div>
-        <div>
-          <label>Location Last Seen *</label>
-          <input id="lost-location" type="text" placeholder="e.g. Library 2nd floor, Canteen B"/>
-        </div>
-        <div>
-          <label>Description</label>
-          <textarea id="lost-desc" rows="3" placeholder="Color, brand, distinguishing marks…"></textarea>
-        </div>
-        <div>
-          <label>Your Name *</label>
-          <input id="lost-reporter" type="text" placeholder="Full name"/>
-        </div>
-        <div>
-          <label>Contact (email or number) *</label>
-          <input id="lost-contact" type="text" placeholder="you@university.edu"/>
-        </div>
-        <div>
-          <label>Photo (optional)</label>
-          <input id="lost-img" type="file" accept="image/*" onchange="previewImg('lost-img','img-preview')"/>
-          <img id="img-preview" alt="preview"/>
-        </div>
-        <button class="btn-primary w-full mt-2" onclick="submitLost()">Submit Lost Report</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- REPORT FOUND -->
-  <div id="page-found" class="page">
-    <h2 class="font-display font-extrabold text-2xl mb-1">Report a Found Item</h2>
-    <p class="text-gray-400 text-sm mb-6">Help someone get their item back. Fill in what you found.</p>
-    <div class="bg-white rounded-2xl border border-[#e8e4df] p-6 max-w-xl">
-      <div class="space-y-4">
-        <div>
-          <label>Item Name *</label>
-          <input id="found-name" type="text" placeholder="e.g. Samsung earbuds case"/>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label>Category *</label>
-            <select id="found-cat">
-              <option value="">Select category</option>
-              <option>Electronics</option>
-              <option>Clothing</option>
-              <option>Accessories</option>
-              <option>ID / Documents</option>
-              <option>Keys</option>
-              <option>Bag / Wallet</option>
-              <option>Books / Stationery</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label>Date Found *</label>
-            <input id="found-date" type="date"/>
-          </div>
-        </div>
-        <div>
-          <label>Where Found *</label>
-          <input id="found-location" type="text" placeholder="e.g. Parking lot near Building C"/>
-        </div>
-        <div>
-          <label>Surrendered To / Currently At</label>
-          <input id="found-storage" type="text" placeholder="e.g. SSO Office, Guard House"/>
-        </div>
-        <div>
-          <label>Description</label>
-          <textarea id="found-desc" rows="3" placeholder="Color, brand, condition…"></textarea>
-        </div>
-        <div>
-          <label>Your Name *</label>
-          <input id="found-reporter" type="text" placeholder="Full name"/>
-        </div>
-        <div>
-          <label>Contact (email or number) *</label>
-          <input id="found-contact" type="text" placeholder="you@university.edu"/>
-        </div>
-        <div>
-          <label>Photo (optional)</label>
-          <input id="found-img" type="file" accept="image/*" onchange="previewImg('found-img','img-preview-found')"/>
-          <img id="img-preview-found" alt="preview"/>
-        </div>
-        <button class="btn-primary w-full mt-2" onclick="submitFound()">Submit Found Report</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- BROWSE -->
-  <div id="page-browse" class="page">
-    <h2 class="font-display font-extrabold text-2xl mb-1">Browse Items</h2>
-    <p class="text-gray-400 text-sm mb-5">Search for your lost item or check what's been found.</p>
-
-    <!-- Filters -->
-    <div class="flex flex-wrap gap-3 mb-6">
-      <div class="search-wrap flex-1 min-w-[180px]">
-        <input id="search-q" type="text" placeholder="🔍  Search by name, location…" oninput="renderBrowse()"/>
-      </div>
-      <select id="filter-type" onchange="renderBrowse()" class="w-auto min-w-[130px]">
-        <option value="">All Types</option>
-        <option value="lost">Lost</option>
-        <option value="found">Found</option>
-      </select>
-      <select id="filter-cat" onchange="renderBrowse()" class="w-auto min-w-[150px]">
-        <option value="">All Categories</option>
-        <option>Electronics</option>
-        <option>Clothing</option>
-        <option>Accessories</option>
-        <option>ID / Documents</option>
-        <option>Keys</option>
-        <option>Bag / Wallet</option>
-        <option>Books / Stationery</option>
-        <option>Other</option>
-      </select>
-      <select id="filter-status" onchange="renderBrowse()" class="w-auto min-w-[130px]">
-        <option value="">All Statuses</option>
-        <option value="active">Active</option>
-        <option value="claimed">Claimed</option>
-      </select>
-    </div>
-
-    <div id="browse-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="page-admin" class="page">
-    <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-      <div>
-        <h2 class="font-display font-extrabold text-2xl mb-0.5">Admin Dashboard</h2>
-        <p class="text-gray-400 text-sm">Manage all submitted reports.</p>
-      </div>
-      <button onclick="confirmClearAll()" class="btn-secondary text-red-500 border-red-300 hover:bg-red-50">Clear All Data</button>
-    </div>
-    <div class="bg-white rounded-2xl border border-[#e8e4df] overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="admin-table w-full">
-          <thead>
-            <tr class="border-b border-[#f0ede9]">
-              <th class="px-5 py-3 text-left">Type</th>
-              <th class="px-5 py-3 text-left">Item</th>
-              <th class="px-5 py-3 text-left">Category</th>
-              <th class="px-5 py-3 text-left">Location</th>
-              <th class="px-5 py-3 text-left">Date</th>
-              <th class="px-5 py-3 text-left">Reporter</th>
-              <th class="px-5 py-3 text-left">Status</th>
-              <th class="px-5 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="admin-tbody"></tbody>
-        </table>
-        <div id="admin-empty" class="empty-state hidden">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5"><path d="M9 12h6M12 9v6M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/></svg>
-          <p>No reports yet.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /max-w -->
-
-<!-- MODAL -->
-<div id="modal-overlay" onclick="closeModal(event)">
-  <div id="modal-box">
-    <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-300 hover:text-gray-600 text-2xl font-light">&times;</button>
-    <div id="modal-content"></div>
+    <div class="items-grid" id="home-grid"></div>
   </div>
 </div>
-
-<!-- TOAST -->
-<div id="toast"></div>
-
-<script>
-// ============ STORAGE ============
-function getItems() { return JSON.parse(localStorage.getItem('unifind_items') || '[]'); }
-function saveItems(items) { localStorage.setItem('unifind_items', JSON.stringify(items)); }
-
-// ============ NAV ============
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-  if (page === 'home') renderHome();
-  if (page === 'browse') renderBrowse();
-  if (page === 'admin') renderAdmin();
-}
-
-// ============ TOAST ============
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ============ IMAGE PREVIEW ============
-function previewImg(inputId, previewId) {
-  const file = document.getElementById(inputId).files[0];
-  const img = document.getElementById(previewId);
-  if (!file) { img.style.display = 'none'; return; }
-  const reader = new FileReader();
-  reader.onload = e => { img.src = e.target.result; img.style.display = 'block'; };
-  reader.readAsDataURL(file);
-}
-
-// ============ SUBMIT LOST ============
-function submitLost() {
-  const name = document.getElementById('lost-name').value.trim();
-  const cat = document.getElementById('lost-cat').value;
-  const date = document.getElementById('lost-date').value;
-  const loc = document.getElementById('lost-location').value.trim();
-  const desc = document.getElementById('lost-desc').value.trim();
-  const reporter = document.getElementById('lost-reporter').value.trim();
-  const contact = document.getElementById('lost-contact').value.trim();
-  const imgFile = document.getElementById('lost-img').files[0];
-
-  if (!name || !cat || !date || !loc || !reporter || !contact) {
-    showToast('⚠️ Please fill in all required fields.'); return;
-  }
-
-  const save = (imgData) => {
-    const item = { id: Date.now(), type: 'lost', name, cat, date, loc, desc, reporter, contact, imgData: imgData || '', status: 'active', createdAt: new Date().toISOString() };
-    const items = getItems();
-    items.unshift(item);
-    saveItems(items);
-    resetForm('lost');
-    showToast('✅ Lost report submitted!');
-    showPage('browse');
-  };
-
-  if (imgFile) {
-    const reader = new FileReader();
-    reader.onload = e => save(e.target.result);
-    reader.readAsDataURL(imgFile);
-  } else { save(''); }
-}
-
-// ============ SUBMIT FOUND ============
-function submitFound() {
-  const name = document.getElementById('found-name').value.trim();
-  const cat = document.getElementById('found-cat').value;
-  const date = document.getElementById('found-date').value;
-  const loc = document.getElementById('found-location').value.trim();
-  const storage = document.getElementById('found-storage').value.trim();
-  const desc = document.getElementById('found-desc').value.trim();
-  const reporter = document.getElementById('found-reporter').value.trim();
-  const contact = document.getElementById('found-contact').value.trim();
-  const imgFile = document.getElementById('found-img').files[0];
-
-  if (!name || !cat || !date || !loc || !reporter || !contact) {
-    showToast('⚠️ Please fill in all required fields.'); return;
-  }
-
-  const save = (imgData) => {
-    const item = { id: Date.now(), type: 'found', name, cat, date, loc, storage, desc, reporter, contact, imgData: imgData || '', status: 'active', createdAt: new Date().toISOString() };
-    const items = getItems();
-    items.unshift(item);
-    saveItems(items);
-    resetForm('found');
-    showToast('✅ Found report submitted!');
-    showPage('browse');
-  };
-
-  if (imgFile) {
-    const reader = new FileReader();
-    reader.onload = e => save(e.target.result);
-    reader.readAsDataURL(imgFile);
-  } else { save(''); }
-}
-
-function resetForm(type) {
-  ['name','cat','date','loc','desc','reporter','contact'].forEach(f => {
-    const el = document.getElementById(type + '-' + f);
-    if (el) el.value = '';
-  });
-  if (type === 'found') { const s = document.getElementById('found-storage'); if(s) s.value=''; }
-  const fi = document.getElementById(type + '-img'); if(fi) fi.value='';
-  const pi = document.getElementById(type === 'lost' ? 'img-preview' : 'img-preview-found');
-  if(pi) pi.style.display='none';
-}
-
-// ============ CARD ============
-function itemCard(item, showContact) {
-  const badgeClass = item.status === 'claimed' ? 'badge-claimed' : (item.type === 'lost' ? 'badge-lost' : 'badge-found');
-  const typeLabel = item.type === 'lost' ? 'Lost' : 'Found';
-  const statusLabel = item.status === 'claimed' ? 'Claimed' : typeLabel;
-  const img = item.imgData ? `<img src="${item.imgData}" class="w-full h-40 object-cover" alt="${item.name}"/>` : `<div class="w-full h-40 bg-[#f5f2ee] flex items-center justify-center text-4xl">${catEmoji(item.cat)}</div>`;
-  const contact = showContact ? `<div class="mt-2 text-xs text-gray-400">📞 ${item.contact}</div>` : '';
-  return `
-    <div class="item-card cursor-pointer" onclick="openModal(${item.id})">
-      ${img}
-      <div class="p-4">
-        <div class="flex items-center gap-2 mb-2">
-          <span class="badge-${item.status === 'claimed' ? 'claimed' : item.type} ${badgeClass} text-xs font-semibold px-2.5 py-0.5 rounded-full">${statusLabel}</span>
-          <span class="text-xs text-gray-300">${item.cat}</span>
+ 
+<!-- PAGE: REPORT -->
+<div id="page-report" class="page">
+  <div class="main">
+    <div class="report-wrap">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back
+      </button>
+      <div class="page-header"><h2>Report an Item</h2><p>Fill out the details below to report a lost or found item on campus.</p></div>
+ 
+      <div class="section-label" style="margin-top:0;">Photo</div>
+      <label class="photo-box" for="r-img" id="r-photo-lbl">
+        <input type="file" id="r-img" accept="image/*" style="display:none;" onchange="previewPhoto()"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p>Click to upload photo</p>
+      </label>
+      <img id="r-preview" class="photo-preview" alt="preview"/>
+ 
+      <div class="section-label">Item Details</div>
+      <div class="form-group"><label class="form-label">Item Name *</label><input id="r-name" class="form-input" type="text" placeholder="e.g. Blue Hydroflask Bottle"/></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea id="r-desc" class="form-textarea" rows="3" placeholder="Describe the item, including any identifying features…"></textarea></div>
+      <div class="form-g2" style="margin-bottom:14px;">
+        <div><label class="form-label">Category *</label>
+          <select id="r-cat" class="form-select"><option value="">Select…</option><option>Gadget</option><option>Umbrella</option><option>School Supply</option><option>Clothing</option><option>ID / Documents</option><option>Keys</option><option>Bag / Wallet</option><option>Other</option></select>
         </div>
-        <div class="font-display font-bold text-base leading-snug">${item.name}</div>
-        <div class="text-xs text-gray-400 mt-1">📍 ${item.loc}</div>
-        <div class="text-xs text-gray-300 mt-0.5">🗓 ${item.date}</div>
-        ${contact}
+        <div><label class="form-label">Status *</label>
+          <select id="r-type" class="form-select"><option value="">Select…</option><option value="lost">Lost</option><option value="found">Found</option></select>
+        </div>
+      </div>
+ 
+      <div class="section-label">Location & Time</div>
+      <div class="form-g2" style="margin-bottom:14px;">
+        <div><label class="form-label">Building *</label>
+          <select id="r-bld" class="form-select"><option value="">Select…</option><option>Xavier Hall</option><option>Other</option></select>
+        </div>
+        <div><label class="form-label">Date *</label><input id="r-date" class="form-input" type="date"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Specific Location</label><input id="r-spot" class="form-input" type="text" placeholder="e.g. Room 205, 2nd Floor"/></div>
+      <div class="form-group"><label class="form-label">Contact Info *</label><input id="r-contact" class="form-input" type="text" placeholder="Email or phone number"/></div>
+      <button class="btn-primary" onclick="submitReport()">Submit Report</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: MY REPORTS -->
+<div id="page-myreports" class="page">
+  <div class="main">
+    <div class="page-header"><h2>My Reports</h2><p>Items you've reported and claim requests you've submitted.</p></div>
+    <div class="mr-tabs">
+      <button class="mr-tab active" id="mrt-items" onclick="mrTab('items')">My Reported Items</button>
+      <button class="mr-tab" id="mrt-claims" onclick="mrTab('claims')">My Claim Requests</button>
+    </div>
+    <div id="mr-items-sec">
+      <div class="section-card">
+        <table class="data-table"><thead><tr><th>Item</th><th>Category</th><th>Type</th><th>Building</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="mr-items-body"></tbody></table>
+        <div id="mr-items-empty" class="empty-state" style="display:none;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><p>No items reported yet.</p></div>
+      </div>
+    </div>
+    <div id="mr-claims-sec" style="display:none;">
+      <div class="section-card">
+        <table class="data-table"><thead><tr><th>Item</th><th>Submitted</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody id="mr-claims-body"></tbody></table>
+        <div id="mr-claims-empty" class="empty-state" style="display:none;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/></svg><p>No claim requests yet.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- PAGE: ALERTS -->
+<div id="page-alerts" class="page">
+  <div class="main" style="max-width:680px;">
+    <div class="page-header">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <h2 style="margin:0;">Notifications</h2>
+      </div>
+    </div>
+    <div id="alerts-list"></div>
+    <div id="alerts-empty" class="empty-state" style="display:none;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg><p>No notifications yet.</p></div>
+  </div>
+</div>
+ 
+<!-- PAGE: ADMIN -->
+<div id="page-admin" class="page">
+  <div class="main">
+    <div class="page-header"><h2>Admin Panel</h2><p>Manage all items and process claim requests.</p></div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="at-dash" onclick="aTab('dash')">Dashboard</button>
+      <button class="admin-tab" id="at-items" onclick="aTab('items')">All Items</button>
+      <button class="admin-tab" id="at-claims" onclick="aTab('claims')">Claim Requests <span class="notif-badge" id="a-claims-badge" style="display:none;"></span></button>
+      <button class="admin-tab" id="at-history" onclick="aTab('history')">Claim History</button>
+    </div>
+    <!-- Dashboard -->
+    <div id="a-dash">
+      <div class="stats-row" id="a-stats"></div>
+      <p style="font-size:0.85rem;font-weight:600;color:#374151;margin-bottom:10px;">Recent Items</p>
+      <div class="section-card"><table class="data-table"><thead><tr><th>Item</th><th>Category</th><th>Building</th><th>Date</th><th>Type</th><th>Status</th></tr></thead><tbody id="a-recent"></tbody></table></div>
+    </div>
+    <!-- All Items -->
+    <div id="a-items" style="display:none;">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <input id="a-search" class="form-input" style="width:220px;" type="text" placeholder="Search…" oninput="renderAItems()"/>
+        <select id="a-ftype" class="filter-select" onchange="renderAItems()"><option value="">All Types</option><option value="found">Found</option><option value="lost">Lost</option><option value="claimed">Claimed</option></select>
+      </div>
+      <div class="section-card"><table class="data-table"><thead><tr><th>Item</th><th>Category</th><th>Building</th><th>Date</th><th>Reporter</th><th>Type / Status</th><th>Action</th></tr></thead><tbody id="a-items-body"></tbody></table>
+      <div id="a-items-empty" class="empty-state" style="display:none;"><p>No items found.</p></div></div>
+    </div>
+    <!-- Claims -->
+    <div id="a-claims" style="display:none;">
+      <div class="section-card"><table class="data-table"><thead><tr><th>Student</th><th>Item</th><th>Submitted</th><th>Verif. Answer</th><th>Status</th><th>Action</th></tr></thead><tbody id="a-claims-body"></tbody></table>
+      <div id="a-claims-empty" class="empty-state" style="display:none;"><p>No claim requests yet.</p></div></div>
+    </div>
+    <!-- History -->
+    <div id="a-history" style="display:none;">
+      <div class="section-card"><table class="data-table"><thead><tr><th>Item</th><th>Claimed By</th><th>Student ID</th><th>Date Approved</th><th>Approved By</th></tr></thead><tbody id="a-history-body"></tbody></table>
+      <div id="a-history-empty" class="empty-state" style="display:none;"><p>No history yet.</p></div></div>
+    </div>
+  </div>
+</div>
+ 
+<!-- MODAL: SIGN IN -->
+<div id="m-signin" class="modal-overlay" onclick="closeOn('m-signin',event)">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>Sign In</h3><button class="modal-close" onclick="closeM('m-signin')">&times;</button></div>
+    <div class="modal-body">
+      <div class="si-tabs">
+        <button class="si-tab active" id="si-student" onclick="siTab('student')">Student</button>
+        <button class="si-tab" id="si-admin" onclick="siTab('admin')">Admin / Security</button>
+      </div>
+      <div class="form-group"><label class="form-label" id="si-ulabel">Student ID or Name</label><input id="si-user" class="form-input" type="text" placeholder="e.g. 2021-12345 or student"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input id="si-pass" class="form-input" type="password" placeholder="••••••••"/>
+        <div id="si-err" style="color:#ef4444;font-size:0.77rem;margin-top:5px;display:none;"></div>
+      </div>
+      <button class="btn-primary" onclick="doSignIn()">Sign In</button>
+      <p style="font-size:0.73rem;color:#94a3b8;text-align:center;margin-top:12px;">Demo — Student: <b>student / student123</b> &nbsp;|&nbsp; Admin: <b>admin / admin123</b></p>
+    </div>
+  </div>
+</div>
+ 
+<!-- MODAL: ITEM DETAIL -->
+<div id="m-item" class="modal-overlay" onclick="closeOn('m-item',event)">
+  <div class="modal-box"><div class="modal-hdr"><div></div><button class="modal-close" onclick="closeM('m-item')">&times;</button></div>
+  <div class="modal-body" id="m-item-body"></div></div>
+</div>
+ 
+<!-- MODAL: VERIFY CLAIM (Admin) -->
+<div id="m-verify" class="modal-overlay" onclick="closeOn('m-verify',event)">
+  <div class="modal-box"><div class="modal-hdr"><h3>Review Claim Request</h3><button class="modal-close" onclick="closeM('m-verify')">&times;</button></div>
+  <div class="modal-body" id="m-verify-body"></div></div>
+</div>
+ 
+<div id="toast"></div>
+ 
+<script>
+// ─── DATA ───
+const DB = {
+  get items()   { return JSON.parse(localStorage.getItem('adnu3_items')  || '[]'); },
+  get claims()  { return JSON.parse(localStorage.getItem('adnu3_claims') || '[]'); },
+  get history() { return JSON.parse(localStorage.getItem('adnu3_hist')   || '[]'); },
+  get alerts()  { return JSON.parse(localStorage.getItem('adnu3_alerts') || '[]'); },
+  setItems(d)   { localStorage.setItem('adnu3_items',  JSON.stringify(d)); },
+  setClaims(d)  { localStorage.setItem('adnu3_claims', JSON.stringify(d)); },
+  setHistory(d) { localStorage.setItem('adnu3_hist',   JSON.stringify(d)); },
+  setAlerts(d)  { localStorage.setItem('adnu3_alerts', JSON.stringify(d)); },
+};
+ 
+// ─── SESSION ───
+let S = JSON.parse(sessionStorage.getItem('adnu3_s') || 'null');
+let siRole = 'student';
+function saveS(s) { S=s; sessionStorage.setItem('adnu3_s', JSON.stringify(s)); }
+function clearS()  { S=null; sessionStorage.removeItem('adnu3_s'); }
+ 
+// ─── UTILS ───
+const emoji = c => ({'Gadget':'📱','Umbrella':'☂️','School Supply':'📚','Clothing':'👕','ID / Documents':'🪪','Keys':'🔑','Bag / Wallet':'👜','Other':'📦'}[c]||'📦');
+const fmtDate = d => { if(!d) return '—'; return new Date(d+'T00:00:00').toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'}); };
+const fmtTs = ts => new Date(ts).toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'});
+const uid = () => Date.now()+Math.floor(Math.random()*9999);
+function toast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+ 
+// ─── MODALS ───
+function openM(id) { document.getElementById(id).classList.add('open'); }
+function closeM(id) { document.getElementById(id).classList.remove('open'); }
+function closeOn(id, e) { if(e.target===document.getElementById(id)) closeM(id); }
+ 
+// ─── NAV ───
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  const nl = document.getElementById('nav-'+p);
+  if(nl) nl.classList.add('active');
+  if(p==='home')      renderGrid();
+  if(p==='myreports') renderMyReports();
+  if(p==='alerts')    { renderAlerts(); markAlertsRead(); }
+  if(p==='admin')     aTab('dash');
+  updateNav();
+}
+function requireAuth(p) {
+  if(!S) { openM('m-signin'); return; }
+  if(p==='admin' && S.role!=='admin') { toast('⚠️ Admin access only.'); return; }
+  showPage(p);
+}
+function updateNav() {
+  document.getElementById('signin-label').textContent = S ? S.name : 'Sign In';
+  const unread = S ? DB.alerts.filter(a=>a.uid===S.id&&!a.read).length : 0;
+  const ab = document.getElementById('alerts-badge');
+  ab.textContent=unread; ab.style.display=unread>0?'':'none';
+  const pc = DB.claims.filter(c=>c.status==='pending').length;
+  const acb = document.getElementById('a-claims-badge');
+  acb.textContent=pc; acb.style.display=pc>0?'':'none';
+}
+function signinOrOut() { S ? (clearS(), toast('Signed out.'), showPage('home'), updateNav()) : openM('m-signin'); }
+ 
+// ─── SIGN IN ───
+function siTab(r) {
+  siRole=r;
+  document.getElementById('si-student').classList.toggle('active',r==='student');
+  document.getElementById('si-admin').classList.toggle('active',r==='admin');
+  document.getElementById('si-ulabel').textContent = r==='admin'?'Username':'Student ID or Name';
+  document.getElementById('si-err').style.display='none';
+}
+function doSignIn() {
+  const u=document.getElementById('si-user').value.trim();
+  const p=document.getElementById('si-pass').value;
+  const err=document.getElementById('si-err');
+  err.style.display='none';
+  if(siRole==='student'&&u==='student'&&p==='student123') {
+    saveS({role:'student',name:'Student',id:'student'});
+    closeM('m-signin'); toast('✅ Signed in as Student'); updateNav();
+  } else if(siRole==='admin'&&u==='admin'&&p==='admin123') {
+    saveS({role:'admin',name:'OSA Admin',id:'admin'});
+    closeM('m-signin'); toast('✅ Signed in as Admin'); updateNav();
+  } else {
+    err.textContent='Incorrect credentials. See demo credentials below.';
+    err.style.display='block';
+  }
+}
+ 
+// ─── HOME GRID ───
+function renderGrid() {
+  const q   = (document.getElementById('home-q').value||'').toLowerCase();
+  const st  = document.getElementById('f-status').value;
+  const cat = document.getElementById('f-cat').value;
+  const bld = document.getElementById('f-bld').value;
+  let items = DB.items.filter(i=>i.itemStatus!=='claimed');
+  if(q)   items=items.filter(i=>i.name.toLowerCase().includes(q)||(i.desc||'').toLowerCase().includes(q));
+  if(st)  items=items.filter(i=>i.reportType===st);
+  if(cat) items=items.filter(i=>i.cat===cat);
+  if(bld) items=items.filter(i=>i.building===bld);
+  document.getElementById('grid-count').textContent=`${items.length} of ${DB.items.filter(i=>i.itemStatus!=='claimed').length} items`;
+  const g=document.getElementById('home-grid');
+  if(!items.length){g.innerHTML=`<div style="grid-column:1/-1;" class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>No items match your search.</p></div>`;return;}
+  g.innerHTML=items.map(item=>`
+    <div class="item-card" onclick="openDetail(${item.id})">
+      <div class="item-thumb">${item.imgData?`<img src="${item.imgData}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}"/>`:emoji(item.cat)}</div>
+      <div class="item-body">
+        <div class="item-header">
+          <div class="item-name">${item.name}</div>
+          <span class="badge ${item.reportType==='found'?'badge-found':'badge-lost'}">${item.reportType==='found'?'Found':'Lost'}</span>
+        </div>
+        <div class="item-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>${item.building}</div>
+        <div class="item-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${item.spot||'—'}</div>
+        <div class="item-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${fmtDate(item.date)}</div>
+      </div>
+    </div>`).join('');
+}
+ 
+// ─── ITEM DETAIL ───
+function openDetail(id) {
+  const item=DB.items.find(i=>i.id===id); if(!item) return;
+  const isMine = S && item.reporterId===S.id;
+  const isClaimed = item.itemStatus==='claimed';
+  const hasPending = S && DB.claims.find(c=>c.itemId===id&&c.uid===S.id&&c.status==='pending');
+  let claimSec='';
+  if(!S) claimSec=`<button class="btn-primary" style="margin-top:14px;" onclick="closeM('m-item');openM('m-signin')">Sign In to Submit a Claim</button>`;
+  else if(isClaimed) claimSec=`<div style="background:#f0fdf4;border-radius:9px;padding:12px;font-size:0.82rem;color:#15803d;font-weight:600;text-align:center;margin-top:14px;">✓ This item has already been claimed.</div>`;
+  else if(isMine) claimSec=`<div style="background:#f8fafc;border-radius:9px;padding:12px;font-size:0.8rem;color:#64748b;text-align:center;margin-top:14px;">This is your reported item.</div>`;
+  else if(hasPending) claimSec=`<div style="background:#fef9c3;border-radius:9px;padding:12px;font-size:0.82rem;color:#a16207;font-weight:600;text-align:center;margin-top:14px;">⏳ You have a pending claim for this item.</div>`;
+  else claimSec=`
+    <div style="border-top:1px solid #f1f5f9;padding-top:16px;margin-top:16px;">
+      <p style="font-size:0.83rem;font-weight:600;margin-bottom:12px;">Submit a Claim Request</p>
+      <div class="form-group"><label class="form-label">Full Name *</label><input id="cl-name" class="form-input" type="text" placeholder="Juan Dela Cruz"/></div>
+      <div class="form-group"><label class="form-label">Student ID *</label><input id="cl-sid" class="form-input" type="text" placeholder="2021-12345"/></div>
+      ${item.verifQ?`<div class="form-group"><label class="form-label">Verification: ${item.verifQ}</label><input id="cl-verif" class="form-input" type="text" placeholder="Your answer…"/></div>`:'<input id="cl-verif" style="display:none;" value=""/>'}
+      <div class="form-group"><label class="form-label">Additional Notes</label><textarea id="cl-notes" class="form-textarea" rows="2" placeholder="Any extra details…"></textarea></div>
+      <button class="btn-primary" onclick="submitClaim(${item.id})">Submit Claim Request</button>
+    </div>`;
+ 
+  document.getElementById('m-item-body').innerHTML=`
+    ${item.imgData?`<img src="${item.imgData}" class="detail-thumb" alt="${item.name}"/>`:`<div class="detail-placeholder">${emoji(item.cat)}</div>`}
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+      <span class="badge ${item.reportType==='found'?'badge-found':'badge-lost'}">${item.reportType==='found'?'Found':'Lost'}</span>
+      ${isClaimed?'<span class="badge badge-claimed">Claimed</span>':''}
+      <span style="font-size:0.72rem;color:#94a3b8;">${item.cat}</span>
+    </div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:12px;">${item.name}</div>
+    <div class="detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Building: <strong>${item.building}</strong></div>
+    ${item.spot?`<div class="detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Specific: <strong>${item.spot}</strong></div>`:''}
+    <div class="detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Date: <strong>${fmtDate(item.date)}</strong></div>
+    ${item.desc?`<div class="detail-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="13" y1="18" x2="3" y2="18"/></svg>${item.desc}</div>`:''}
+    ${claimSec}`;
+  openM('m-item');
+}
+ 
+// ─── REPORT ───
+function previewPhoto() {
+  const f=document.getElementById('r-img').files[0];
+  const p=document.getElementById('r-preview');
+  const l=document.getElementById('r-photo-lbl');
+  if(!f){p.style.display='none';l.style.display='';return;}
+  const r=new FileReader(); r.onload=e=>{p.src=e.target.result;p.style.display='block';l.style.display='none';}; r.readAsDataURL(f);
+}
+function submitReport() {
+  const name=document.getElementById('r-name').value.trim();
+  const desc=document.getElementById('r-desc').value.trim();
+  const cat=document.getElementById('r-cat').value;
+  const type=document.getElementById('r-type').value;
+  const bld=document.getElementById('r-bld').value;
+  const date=document.getElementById('r-date').value;
+  const spot=document.getElementById('r-spot').value.trim();
+  const contact=document.getElementById('r-contact').value.trim();
+  const imgF=document.getElementById('r-img').files[0];
+  if(!name||!cat||!type||!bld||!date||!contact){toast('⚠️ Fill in all required fields.');return;}
+  const save=imgData=>{
+    const item={id:uid(),name,desc,cat,reportType:type,itemStatus:'unclaimed',building:bld,date,spot,contact,imgData:imgData||'',reporterId:S?S.id:'guest',reporterName:S?S.name:'Guest',createdAt:new Date().toISOString(),verifQ:'',verifA:''};
+    const items=DB.items; items.unshift(item); DB.setItems(items);
+    if(S) pushAlert(S.id,'submitted',`Your report for "${name}" has been submitted.`,'blue');
+    ['r-name','r-desc','r-cat','r-type','r-bld','r-date','r-spot','r-contact'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+    document.getElementById('r-img').value='';
+    document.getElementById('r-preview').style.display='none';
+    document.getElementById('r-photo-lbl').style.display='';
+    toast('✅ Report submitted!'); showPage('home');
+  };
+  if(imgF){const r=new FileReader();r.onload=e=>save(e.target.result);r.readAsDataURL(imgF);}else save('');
+}
+ 
+// ─── CLAIM ───
+function submitClaim(itemId) {
+  const name=(document.getElementById('cl-name')||{}).value?.trim();
+  const sid=(document.getElementById('cl-sid')||{}).value?.trim();
+  const verif=(document.getElementById('cl-verif')||{}).value||'';
+  const notes=(document.getElementById('cl-notes')||{}).value?.trim();
+  if(!name||!sid){toast('⚠️ Name and Student ID required.');return;}
+  const c={id:uid(),itemId,studentName:name,studentId:sid,verifAnswer:verif,notes,status:'pending',createdAt:new Date().toISOString(),uid:S?S.id:''};
+  const cls=DB.claims; cls.unshift(c); DB.setClaims(cls);
+  closeM('m-item'); toast('📩 Claim submitted! Admin will review soon.'); updateNav();
+}
+ 
+// ─── MY REPORTS ───
+function mrTab(t) {
+  document.getElementById('mrt-items').classList.toggle('active',t==='items');
+  document.getElementById('mrt-claims').classList.toggle('active',t==='claims');
+  document.getElementById('mr-items-sec').style.display=t==='items'?'':'none';
+  document.getElementById('mr-claims-sec').style.display=t==='claims'?'':'none';
+}
+function renderMyReports() {
+  if(!S) return;
+  const myI=DB.items.filter(i=>i.reporterId===S.id);
+  const ib=document.getElementById('mr-items-body');
+  const ie=document.getElementById('mr-items-empty');
+  if(!myI.length){ib.innerHTML='';ie.style.display='block';}
+  else{ie.style.display='none';ib.innerHTML=myI.map(i=>`<tr>
+    <td style="font-weight:600;">${i.name}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${emoji(i.cat)} ${i.cat}</td>
+    <td><span class="badge ${i.reportType==='found'?'badge-found':'badge-lost'}">${i.reportType==='found'?'Found':'Lost'}</span></td>
+    <td style="font-size:0.8rem;color:#64748b;">${i.building}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${fmtDate(i.date)}</td>
+    <td><span class="badge ${i.itemStatus==='claimed'?'badge-claimed':'badge-pending'}">${i.itemStatus==='claimed'?'Claimed':'Unclaimed'}</span></td>
+  </tr>`).join('');}
+  const myC=DB.claims.filter(c=>c.uid===S.id);
+  const cb=document.getElementById('mr-claims-body');
+  const ce=document.getElementById('mr-claims-empty');
+  if(!myC.length){cb.innerHTML='';ce.style.display='block';}
+  else{ce.style.display='none';cb.innerHTML=myC.map(c=>{
+    const item=DB.items.find(i=>i.id===c.itemId);
+    const badge=c.status==='pending'?'<span class="badge badge-pending">Pending</span>':c.status==='approved'?'<span class="badge badge-found">Approved ✓</span>':'<span class="badge badge-rejected">Rejected</span>';
+    const note=c.status==='pending'?'Waiting for admin review.':c.status==='approved'?'Visit OSA office to collect.':'Contact OSA for details.';
+    return`<tr><td style="font-weight:600;">${item?item.name:'(deleted)'}</td><td style="font-size:0.8rem;color:#64748b;">${fmtTs(c.createdAt)}</td><td>${badge}</td><td style="font-size:0.78rem;color:#64748b;font-style:italic;">${note}</td></tr>`;
+  }).join('');}
+}
+ 
+// ─── ALERTS ───
+function pushAlert(userId,type,msg,iconType) {
+  const a=DB.alerts; a.unshift({id:uid(),uid:userId,type,msg,iconType,read:false,ts:new Date().toISOString()}); DB.setAlerts(a); updateNav();
+}
+function markAlertsRead() {
+  if(!S) return;
+  DB.setAlerts(DB.alerts.map(a=>a.uid===S.id?{...a,read:true}:a)); updateNav();
+}
+function renderAlerts() {
+  if(!S) return;
+  const mine=DB.alerts.filter(a=>a.uid===S.id);
+  const list=document.getElementById('alerts-list');
+  const empty=document.getElementById('alerts-empty');
+  if(!mine.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  const titles={submitted:'Report Submitted',match:'Possible Match Found',approved:'Claim Approved',rejected:'Claim Rejected',warning:'Disposal Warning'};
+  const icons={submitted:'📝',match:'⚙️',approved:'✅',rejected:'❌',warning:'⚠️'};
+  const bgc={submitted:'blue',match:'blue',approved:'green',warning:'yellow',rejected:'blue'};
+  list.innerHTML=mine.map(a=>`
+    <div class="alert-card ${a.read?'':'unread'}">
+      <div class="alert-icon ${bgc[a.type]||'blue'}">${icons[a.type]||'🔔'}</div>
+      <div><div class="alert-title">${titles[a.type]||'Notification'}</div><div class="alert-desc">${a.msg}</div><div class="alert-date">${fmtTs(a.ts)}</div></div>
+    </div>`).join('');
+}
+ 
+// ─── ADMIN ───
+function aTab(t) {
+  ['dash','items','claims','history'].forEach(x=>{
+    document.getElementById('at-'+x).classList.toggle('active',x===t);
+    document.getElementById('a-'+x).style.display=x===t?'':'none';
+  });
+  if(t==='dash')    renderADash();
+  if(t==='items')   renderAItems();
+  if(t==='claims')  renderAClaims();
+  if(t==='history') renderAHistory();
+}
+function renderADash() {
+  const items=DB.items,claims=DB.claims;
+  document.getElementById('a-stats').innerHTML=[
+    {num:items.length,label:'Total Items'},
+    {num:items.filter(i=>i.reportType==='found'&&i.itemStatus!=='claimed').length,label:'Found (Unclaimed)'},
+    {num:items.filter(i=>i.reportType==='lost'&&i.itemStatus!=='claimed').length,label:'Lost (Active)'},
+    {num:items.filter(i=>i.itemStatus==='claimed').length,label:'Claimed'},
+    {num:claims.filter(c=>c.status==='pending').length,label:'Pending Claims'},
+  ].map(s=>`<div class="stat-card"><div class="stat-num">${s.num}</div><div class="stat-label">${s.label}</div></div>`).join('');
+  document.getElementById('a-recent').innerHTML=items.slice(0,6).map(i=>`<tr>
+    <td style="font-weight:600;">${i.name}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${emoji(i.cat)} ${i.cat}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${i.building}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${fmtDate(i.date)}</td>
+    <td><span class="badge ${i.reportType==='found'?'badge-found':'badge-lost'}">${i.reportType==='found'?'Found':'Lost'}</span></td>
+    <td><span class="badge ${i.itemStatus==='claimed'?'badge-claimed':'badge-pending'}">${i.itemStatus==='claimed'?'Claimed':'Unclaimed'}</span></td>
+  </tr>`).join('');
+}
+function renderAItems() {
+  const q=(document.getElementById('a-search').value||'').toLowerCase();
+  const ft=document.getElementById('a-ftype').value;
+  let items=DB.items;
+  if(q) items=items.filter(i=>i.name.toLowerCase().includes(q));
+  if(ft==='claimed') items=items.filter(i=>i.itemStatus==='claimed');
+  else if(ft) items=items.filter(i=>i.reportType===ft&&i.itemStatus!=='claimed');
+  const b=document.getElementById('a-items-body');
+  const e=document.getElementById('a-items-empty');
+  if(!items.length){b.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  b.innerHTML=items.map(i=>`<tr>
+    <td><div style="font-weight:600;">${i.name}</div>${i.desc?`<div style="font-size:0.72rem;color:#94a3b8;">${i.desc.slice(0,42)}${i.desc.length>42?'…':''}</div>`:''}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${emoji(i.cat)} ${i.cat}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${i.building}${i.spot?'<br><span style="font-size:0.7rem;">'+i.spot+'</span>':''}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${fmtDate(i.date)}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${i.reporterName||'—'}</td>
+    <td><span class="badge ${i.reportType==='found'?'badge-found':'badge-lost'}">${i.reportType==='found'?'Found':'Lost'}</span> ${i.itemStatus==='claimed'?'<span class="badge badge-claimed" style="margin-left:3px;">Claimed</span>':''}</td>
+    <td><button class="btn-sm-red" onclick="delItem(${i.id})">Delete</button></td>
+  </tr>`).join('');
+}
+function delItem(id) {
+  if(!confirm('Delete this item?')) return;
+  DB.setItems(DB.items.filter(i=>i.id!==id));
+  renderAItems(); renderADash(); toast('🗑️ Deleted.');
+}
+function renderAClaims() {
+  const claims=DB.claims;
+  const b=document.getElementById('a-claims-body');
+  const e=document.getElementById('a-claims-empty');
+  if(!claims.length){b.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  b.innerHTML=claims.map(c=>{
+    const item=DB.items.find(i=>i.id===c.itemId);
+    const ca=item?.verifA||'';
+    const match=ca&&c.verifAnswer&&ca.toLowerCase()===c.verifAnswer.toLowerCase().trim();
+    const mt=ca?(match?'<span style="color:#15803d;font-weight:700;font-size:0.76rem;">✓ Correct</span>':'<span style="color:#b91c1c;font-weight:700;font-size:0.76rem;">✗ Wrong</span>'):'';
+    const sb=c.status==='pending'?'<span class="badge badge-pending">Pending</span>':c.status==='approved'?'<span class="badge badge-found">Approved</span>':'<span class="badge badge-rejected">Rejected</span>';
+    const act=c.status==='pending'?`<button class="btn-sm-dark" onclick="openVerify(${c.id})">Review</button>`:'—';
+    return`<tr>
+      <td><div style="font-weight:600;">${c.studentName}</div><div style="font-size:0.72rem;color:#94a3b8;">${c.studentId}</div></td>
+      <td style="font-size:0.82rem;">${item?item.name:'(deleted)'}</td>
+      <td style="font-size:0.78rem;color:#64748b;">${fmtTs(c.createdAt)}</td>
+      <td style="font-size:0.8rem;">${c.verifAnswer||'—'}<br>${mt}</td>
+      <td>${sb}</td><td>${act}</td>
+    </tr>`;
+  }).join('');
+  updateNav();
+}
+function openVerify(claimId) {
+  const claim=DB.claims.find(c=>c.id===claimId);
+  const item=claim?DB.items.find(i=>i.id===claim.itemId):null;
+  if(!claim||!item){toast('Not found.');return;}
+  const ca=item.verifA||'';
+  const sa=(claim.verifAnswer||'').toLowerCase().trim();
+  const match=ca&&sa&&ca.toLowerCase()===sa;
+  document.getElementById('m-verify-body').innerHTML=`
+    <div style="display:grid;gap:12px;">
+      <div style="background:#f8fafc;border-radius:9px;padding:13px 15px;">
+        <div style="font-size:0.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;">Item</div>
+        <div style="font-weight:700;">${item.name}</div>
+        <div style="font-size:0.8rem;color:#64748b;">${emoji(item.cat)} ${item.cat} · ${item.building}${item.spot?', '+item.spot:''}</div>
+        ${item.desc?`<div style="font-size:0.8rem;color:#64748b;margin-top:3px;">${item.desc}</div>`:''}
+      </div>
+      <div style="background:#f8fafc;border-radius:9px;padding:13px 15px;">
+        <div style="font-size:0.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;">Claimant</div>
+        <div style="font-weight:600;">${claim.studentName}</div>
+        <div style="font-size:0.8rem;color:#64748b;">ID: ${claim.studentId}</div>
+        ${claim.notes?`<div style="font-size:0.8rem;margin-top:3px;font-style:italic;">"${claim.notes}"</div>`:''}
+      </div>
+      ${item.verifQ?`
+      <div class="verify-box" style="background:${match?'#f0fdf4':'#fff1f2'};border:1px solid ${match?'#86efac':'#fca5a5'};">
+        <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:7px;color:${match?'#15803d':'#b91c1c'};">Ownership Verification</div>
+        <div style="font-size:0.83rem;font-weight:600;margin-bottom:3px;">Q: ${item.verifQ}</div>
+        <div style="font-size:0.83rem;">Student answered: <strong>${claim.verifAnswer||'(none)'}</strong></div>
+        <div style="font-size:0.83rem;">Correct answer: <strong>${item.verifA}</strong></div>
+        <div style="font-weight:700;font-size:0.83rem;margin-top:5px;color:${match?'#15803d':'#b91c1c'};">${match?'✓ Answers match':'✗ Answers do not match'}</div>
+      </div>`:'<div style="background:#f8fafc;border-radius:9px;padding:11px 13px;font-size:0.8rem;color:#94a3b8;">No verification question set.</div>'}
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn-sm-red" onclick="resolve(${claimId},'rejected')">Reject</button>
+        <button class="btn-sm-green" onclick="resolve(${claimId},'approved')">Approve & Mark Claimed</button>
       </div>
     </div>`;
+  openM('m-verify');
 }
-
-function catEmoji(cat) {
-  const map = { 'Electronics': '📱', 'Clothing': '👕', 'Accessories': '💍', 'ID / Documents': '🪪', 'Keys': '🔑', 'Bag / Wallet': '👜', 'Books / Stationery': '📚', 'Other': '📦' };
-  return map[cat] || '📦';
-}
-
-// ============ HOME ============
-function renderHome() {
-  const items = getItems();
-  const lost = items.filter(i => i.type === 'lost');
-  const found = items.filter(i => i.type === 'found');
-  const claimed = items.filter(i => i.status === 'claimed');
-  document.getElementById('stat-lost').textContent = lost.length;
-  document.getElementById('stat-found').textContent = found.length;
-  document.getElementById('stat-claimed').textContent = claimed.length;
-
-  const recent = items.slice(0, 6);
-  const grid = document.getElementById('recent-items');
-  if (!recent.length) {
-    grid.innerHTML = `<div class="col-span-3 empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p class="text-sm">No reports yet. Be the first!</p></div>`;
+function resolve(claimId, decision) {
+  const claims=DB.claims;
+  const idx=claims.findIndex(c=>c.id===claimId);
+  if(idx<0) return;
+  claims[idx].status=decision; DB.setClaims(claims);
+  if(decision==='approved') {
+    const claim=claims[idx];
+    const items=DB.items;
+    const ii=items.findIndex(i=>i.id===claim.itemId);
+    if(ii>-1){items[ii].itemStatus='claimed';DB.setItems(items);}
+    const item=ii>-1?items[ii]:null;
+    const h=DB.history; h.unshift({id:uid(),itemId:claim.itemId,itemName:item?item.name:'Unknown',itemCat:item?item.cat:'',studentName:claim.studentName,studentId:claim.studentId,approvedAt:new Date().toISOString(),approvedBy:'OSA Admin'});DB.setHistory(h);
+    pushAlert(claim.uid,'approved',`Your claim for "${item?item.name:'item'}" has been approved. Visit the OSA office to collect your item.`,'green');
+    toast('✅ Claim approved!');
   } else {
-    grid.innerHTML = recent.map(i => itemCard(i, false)).join('');
+    const claim=claims[idx];
+    pushAlert(claim.uid,'rejected','Your claim request was not approved. Contact OSA for more details.','blue');
+    toast('❌ Claim rejected.');
   }
+  closeM('m-verify'); renderAClaims(); renderADash();
 }
-
-// ============ BROWSE ============
-function renderBrowse() {
-  const q = document.getElementById('search-q').value.toLowerCase();
-  const type = document.getElementById('filter-type').value;
-  const cat = document.getElementById('filter-cat').value;
-  const status = document.getElementById('filter-status').value;
-
-  let items = getItems();
-  if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.loc.toLowerCase().includes(q) || (i.desc||'').toLowerCase().includes(q));
-  if (type) items = items.filter(i => i.type === type);
-  if (cat) items = items.filter(i => i.cat === cat);
-  if (status) items = items.filter(i => i.status === status);
-
-  const grid = document.getElementById('browse-grid');
-  if (!items.length) {
-    grid.innerHTML = `<div class="col-span-3 empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p class="text-sm">No items match your search.</p></div>`;
-  } else {
-    grid.innerHTML = items.map(i => itemCard(i, false)).join('');
-  }
+function renderAHistory() {
+  const h=DB.history;
+  const b=document.getElementById('a-history-body');
+  const e=document.getElementById('a-history-empty');
+  if(!h.length){b.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  b.innerHTML=h.map(x=>`<tr>
+    <td style="font-weight:600;">${x.itemName}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${emoji(x.itemCat)} ${x.itemCat}</td>
+    <td style="font-weight:500;">${x.studentName}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${x.studentId}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${fmtTs(x.approvedAt)}</td>
+    <td style="font-size:0.8rem;color:#64748b;">${x.approvedBy}</td>
+  </tr>`).join('');
 }
-
-// ============ MODAL ============
-function openModal(id) {
-  const item = getItems().find(i => i.id === id);
-  if (!item) return;
-  const img = item.imgData ? `<img src="${item.imgData}" class="w-full h-48 object-cover rounded-xl mb-4" alt="${item.name}"/>` : `<div class="w-full h-40 bg-[#f5f2ee] rounded-xl flex items-center justify-center text-5xl mb-4">${catEmoji(item.cat)}</div>`;
-  const typeColor = item.type === 'lost' ? 'text-[#e85d26]' : 'text-[#1a8a50]';
-  const statusBadge = item.status === 'claimed' ? '<span class="badge-claimed text-xs px-2.5 py-0.5 rounded-full font-semibold ml-2">Claimed</span>' : '';
-  const storage = item.storage ? `<div class="text-sm text-gray-500 mt-1">📦 Currently at: <span class="font-medium">${item.storage}</span></div>` : '';
-
-  document.getElementById('modal-content').innerHTML = `
-    ${img}
-    <div class="flex items-center gap-2 mb-1">
-      <span class="font-display font-extrabold text-xl ${typeColor}">${item.type === 'lost' ? 'Lost Item' : 'Found Item'}</span>${statusBadge}
-    </div>
-    <h3 class="font-display font-bold text-2xl mb-3">${item.name}</h3>
-    <div class="space-y-2 text-sm text-gray-600 mb-4">
-      <div>🏷️ Category: <span class="font-medium text-gray-800">${item.cat}</span></div>
-      <div>📍 Location: <span class="font-medium text-gray-800">${item.loc}</span></div>
-      <div>🗓 Date: <span class="font-medium text-gray-800">${item.date}</span></div>
-      ${storage}
-      ${item.desc ? `<div>📝 Description: <span class="text-gray-700">${item.desc}</span></div>` : ''}
-    </div>
-    <div class="bg-[#f5f2ee] rounded-xl p-4 text-sm">
-      <div class="font-semibold text-gray-700 mb-1">Reported by</div>
-      <div>${item.reporter}</div>
-      <div class="text-gray-500">${item.contact}</div>
-    </div>
-    ${item.status !== 'claimed' ? `<button onclick="markClaimed(${item.id})" class="btn-primary w-full mt-4">Mark as Claimed ✓</button>` : '<div class="text-center text-gray-400 text-sm mt-4 font-medium">This item has been claimed.</div>'}
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay') || e.currentTarget.tagName === 'BUTTON') {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
-}
-
-function markClaimed(id) {
-  const items = getItems();
-  const idx = items.findIndex(i => i.id === id);
-  if (idx > -1) { items[idx].status = 'claimed'; saveItems(items); }
-  closeModal();
-  showToast('🎉 Item marked as claimed!');
-  renderBrowse(); renderAdmin(); renderHome();
-}
-
-// ============ ADMIN ============
-function renderAdmin() {
-  const items = getItems();
-  const tbody = document.getElementById('admin-tbody');
-  const empty = document.getElementById('admin-empty');
-  if (!items.length) {
-    tbody.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-  const typeColor = t => t === 'lost' ? 'badge-lost' : 'badge-found';
-  tbody.innerHTML = items.map(item => `
-    <tr>
-      <td class="px-5 py-3"><span class="${typeColor(item.type)} text-xs px-2 py-0.5 rounded-full font-semibold capitalize">${item.type}</span></td>
-      <td class="px-5 py-3 font-medium">${item.name}</td>
-      <td class="px-5 py-3 text-gray-400">${item.cat}</td>
-      <td class="px-5 py-3 text-gray-400 max-w-[150px] truncate">${item.loc}</td>
-      <td class="px-5 py-3 text-gray-400 whitespace-nowrap">${item.date}</td>
-      <td class="px-5 py-3">${item.reporter}</td>
-      <td class="px-5 py-3">
-        <span class="${item.status === 'claimed' ? 'badge-claimed' : (item.type==='lost'?'badge-lost':'badge-found')} text-xs px-2 py-0.5 rounded-full font-semibold capitalize">
-          ${item.status}
-        </span>
-      </td>
-      <td class="px-5 py-3 flex gap-2 flex-wrap">
-        <button onclick="openModal(${item.id})" class="text-xs btn-secondary py-1 px-3">View</button>
-        <button onclick="deleteItem(${item.id})" class="text-xs bg-red-50 border border-red-200 text-red-500 font-bold rounded-lg py-1 px-3 hover:bg-red-100 transition">Delete</button>
-      </td>
-    </tr>`).join('');
-}
-
-function deleteItem(id) {
-  if (!confirm('Delete this report?')) return;
-  const items = getItems().filter(i => i.id !== id);
-  saveItems(items);
-  renderAdmin(); renderHome();
-  showToast('🗑️ Report deleted.');
-}
-
-function confirmClearAll() {
-  if (!confirm('Are you sure? This will permanently delete ALL reports.')) return;
-  localStorage.removeItem('unifind_items');
-  renderAdmin(); renderHome();
-  showToast('🗑️ All data cleared.');
-}
-
-// ============ INIT ============
-renderHome();
+ 
+// ─── SEED ───
+(function seed(){
+  if(DB.items.length) return;
+  const ago=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0];};
+  DB.setItems([
+    {id:1001,name:'Blue Hydroflask Bottle',desc:'2nd Floor, Room 205',cat:'School Supply',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'2nd Floor, Room 205',date:ago(13),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'What sticker is on the bottle?',verifA:'sunflower'},
+    {id:1002,name:'TI-84 Calculator',desc:'Room 301',cat:'Gadget',reportType:'lost',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Room 301',date:ago(14),contact:'student@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Student',createdAt:new Date().toISOString(),verifQ:'',verifA:''},
+    {id:1003,name:'ADNU Student ID',desc:'Main Entrance',cat:'ID / Documents',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Main Entrance',date:ago(15),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'What course is on the ID?',verifA:'bscs'},
+    {id:1004,name:'Black JanSport Backpack',desc:'Lecture Hall A',cat:'Bag / Wallet',reportType:'lost',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Lecture Hall A',date:ago(16),contact:'student2@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Student',createdAt:new Date().toISOString(),verifQ:'',verifA:''},
+    {id:1005,name:'Red Folding Umbrella',desc:'3rd Floor Reading Area',cat:'Umbrella',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'3rd Floor Reading Area',date:ago(18),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'What brand is the umbrella?',verifA:'fibrella'},
+    {id:1006,name:'USB Flash Drive 32GB',desc:'Computer Lab 2',cat:'Gadget',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Computer Lab 2',date:ago(17),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'',verifA:''},
+    {id:1007,name:'Pencil Case with Supplies',desc:'Room 102',cat:'School Supply',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Room 102',date:ago(12),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'',verifA:''},
+    {id:1008,name:'Apple AirPods Pro',desc:'Outdoor Bench Area',cat:'Gadget',reportType:'found',itemStatus:'unclaimed',building:'Xavier Hall',spot:'Outdoor Bench Area',date:ago(11),contact:'osa@adnu.edu.ph',imgData:'',reporterId:'seed',reporterName:'Security',createdAt:new Date().toISOString(),verifQ:'What color is the case?',verifA:'white'},
+  ]);
+  DB.setAlerts([
+    {id:9001,uid:'student',type:'match',msg:'An item matching your lost "TI-84 Calculator" report has been logged as found in Xavier Hall.',iconType:'blue',read:false,ts:new Date(Date.now()-86400000*11).toISOString()},
+    {id:9002,uid:'student',type:'approved',msg:'Your claim for "Red Folding Umbrella" has been approved. Please visit the security office to collect your item.',iconType:'green',read:false,ts:new Date(Date.now()-86400000*12).toISOString()},
+    {id:9003,uid:'student',type:'warning',msg:'"Blue Hydroflask Bottle" has been unclaimed for 25 days. It will be disposed of in 5 days if not claimed.',iconType:'yellow',read:false,ts:new Date(Date.now()-86400000*13).toISOString()},
+  ]);
+})();
+ 
+renderGrid(); updateNav();
 </script>
 </body>
 </html>
