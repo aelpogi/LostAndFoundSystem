@@ -20,6 +20,7 @@
   "homepage": "https://github.com/aelpogi/LostAndFoundSystem#readme",
   "dependencies": {
     "@tailwindcss/cli": "^4.2.2",
+    "badge-maker": "^5.0.2",
     "tailwindcss": "^4.2.2"
   }
 }
