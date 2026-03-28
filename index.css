@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    --primary: 221 45% 18%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 95%;
+    --secondary-foreground: 221 45% 18%;
+
+    --muted: 215 15% 92%;
+    --muted-foreground: 215 15% 50%;
+
+    --accent: 48 100% 50%;
+    --accent-foreground: 224 71% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 45% 18%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 15% 50%;
+    --sidebar-primary: 221 45% 18%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 95%;
+    --sidebar-accent-foreground: 221 45% 18%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 221 45% 18%;
+
+    /* Custom tokens */
+    --status-lost: 38 92% 50%;
+    --status-lost-foreground: 38 92% 20%;
+    --status-found: 152 69% 31%;
+    --status-found-foreground: 152 69% 10%;
+    --status-claimed: 215 15% 50%;
+    --status-claimed-foreground: 0 0% 100%;
+
+    --shadow-card: 0 0 0 1px rgba(0,0,0,.04), 0 2px 4px rgba(0,0,0,.04), 0 8px 16px rgba(0,0,0,.03);
+    --shadow-card-hover: 0 0 0 1px rgba(0,0,0,.06), 0 4px 8px rgba(0,0,0,.06), 0 16px 32px rgba(0,0,0,.04);
+    --shadow-input: inset 0 1px 2px rgba(0,0,0,.06);
+
+    --ease-out-expo: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+    --card: 224 50% 8%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 50% 8%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 210 40% 80%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 48 100% 50%;
+    --accent-foreground: 224 71% 4%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 213 27% 84%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    @apply font-semibold text-foreground;
+  }
+}
+
+@layer utilities {
+  .card-shadow {
+    box-shadow: var(--shadow-card);
+  }
+  .card-shadow-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .input-shadow {
+    box-shadow: var(--shadow-input);
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
